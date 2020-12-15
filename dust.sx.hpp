@@ -18,7 +18,7 @@ public:
      *
      * ### params
      *
-     * - `{set<name>} accounts` - accounts to dust
+     * - `{set<permission_level>} accounts` - accounts to dust
      * - `{vector<extended_symbol>} tokens` - token symbols to dust
      * - `{time_point_sec} last_harvest` - last harvest timestamp
      *
@@ -26,7 +26,7 @@ public:
      *
      * ```json
      * {
-     *     "accounts": ["flash.sx"],
+     *     "accounts": [{"actor": "flash.sx", "permission": "dust"}],
      *     "tokens": [
      *         {"symbol": "8,TAG", "contract": "tagtokenmain"}
      *     ],
@@ -35,9 +35,9 @@ public:
      * ```
      */
     struct [[eosio::table("settings")]] settings_row {
-        set<name>               accounts;
-        vector<extended_symbol> tokens;
-        time_point_sec          last_harvest;
+        set<permission_level>       accounts;
+        vector<extended_symbol>     tokens;
+        time_point_sec              last_harvest;
     };
     typedef eosio::singleton< "settings"_n, settings_row> settings_table;
 
@@ -55,11 +55,11 @@ public:
      * ### Example
      *
      * ```bash
-     * $ cleos push action dust.sx harvest '["flash.sx"]' -p dust.sx
+     * $ cleos push action dust.sx harvest '[["flash.sx", "dust"]]' -p dust.sx
      * ```
      */
     [[eosio::action]]
-    void harvest( const name account );
+    void harvest( const permission_level account );
 
     /**
      * ## ACTION `sell`
@@ -76,11 +76,11 @@ public:
      * ### Example
      *
      * ```bash
-     * $ cleos push action dust.sx sell '["flash.sx", ["8,TAG", "tagtokenmain"]]' -p dust.sx
+     * $ cleos push action dust.sx sell '[["flash.sx", "dust"], ["8,TAG", "tagtokenmain"]]' -p dust.sx
      * ```
      */
     [[eosio::action]]
-    void sell( const name account, const extended_symbol token );
+    void sell( const permission_level account, const extended_symbol token );
 
     /**
      * ## ACTION `dustall`
@@ -115,11 +115,11 @@ public:
      * ### Example
      *
      * ```bash
-     * $ cleos push action dust.sx setsettings '[["flash.sx"], [["8,TAG", "tagtokenmain"]]]' -p dust.sx
+     * $ cleos push action dust.sx setsettings '[[["flash.sx", "dust"]], [["8,TAG", "tagtokenmain"]]]' -p dust.sx
      * ```
      */
     [[eosio::action]]
-    void setsettings( const set<name> accounts, const vector<extended_symbol> tokens );
+    void setsettings( const set<permission_level> accounts, const vector<extended_symbol> tokens );
 
     // static actions
     using harvest_action = eosio::action_wrapper<"harvest"_n, &sx::dust::harvest>;
@@ -129,6 +129,6 @@ public:
 
 private:
     // eosio.token helper
-    void transfer( const name from, const name to, const extended_asset quantity, const string memo );
+    void transfer( const permission_level from, const name to, const extended_asset quantity, const string memo );
 };
 }

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# set settings
+cleos push action dust.sx setsettings '[[["flash.sx","dust"]], [["8,TAG", "tagtokenmain"]]]' -p dust.sx
+
 # harvest DFS TAG claim
 cleos push action dust.sx harvest '["flash.sx"]' -p dust.sx
 
