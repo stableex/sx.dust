@@ -101,6 +101,24 @@ public:
     void dustall();
 
     /**
+     * ## ACTION `claim`
+     *
+     * Harvest and dust all tokens from all accounts
+     *
+     * - **authority**: `get_self()`
+     *
+     * ### params
+     *
+     * ### Example
+     *
+     * ```bash
+     * $ cleos push action dust.sx claim '[]' -p dust.sx
+     * ```
+     */
+    [[eosio::action]]
+    void claim();
+
+    /**
      * ## ACTION `setsettings`
      *
      * Set settings
@@ -130,5 +148,7 @@ public:
 private:
     // eosio.token helper
     void transfer( const permission_level from, const name to, const extended_asset quantity, const string memo );
+
+    asset get_balance( name owner, extended_symbol ext_sym);
 };
 }
